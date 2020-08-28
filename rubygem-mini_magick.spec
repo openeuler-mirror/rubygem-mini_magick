@@ -7,7 +7,11 @@ License:             MIT
 URL:                 https://github.com/minimagick/minimagick
 Source0:             https://rubygems.org/gems/%{gem_name}-%{version}.gem
 Source1:             https://github.com/minimagick/minimagick/archive/v%{version}.tar.gz
+# Use smallcase for MiniMagick::Image#details
+# https://github.com/minimagick/minimagick/pull/454/
 Patch0:              mini_magick-4.8.0-Use-smallcase-for-Image-details-in-tests.patch
+# Match new `identify` error message
+# https://github.com/minimagick/minimagick/pull/455/
 Patch1:              mini_magick-4.8.0-match-new-identify-error-message-in-tests.patch
 Requires:            ImageMagick
 BuildRequires:       ruby(release) rubygems-devel ruby rubygem(rspec) rubygem(webmock) ImageMagick
