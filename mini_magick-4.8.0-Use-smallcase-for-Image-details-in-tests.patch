@@ -1,0 +1,23 @@
+From ea9df8283b4d2c354f0f1887ea29f742913d44b7 Mon Sep 17 00:00:00 2001
+From: Pavel Valena <pvalena@redhat.com>
+Date: Tue, 5 Jun 2018 18:06:47 +0200
+Subject: [PATCH] Fix test: Use smallcase for MiniMagick::Image#details
+
+`MiniMagick::Image#details` has been deprecated, as it was causing too many parsing errors. You should use MiniMagick::Image#data instead, which differs in a way that the keys are in camelcase.
+---
+ spec/lib/mini_magick/image_spec.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/spec/lib/mini_magick/image_spec.rb b/spec/lib/mini_magick/image_spec.rb
+index 784d01a..b240516 100644
+--- a/spec/lib/mini_magick/image_spec.rb
++++ b/spec/lib/mini_magick/image_spec.rb
+@@ -420,7 +420,7 @@ def create(path = image_path)
+         it "returns a hash of verbose information" do
+           expect(subject.details["Format"]).to match /^JPEG/
+           if MiniMagick.cli == :imagemagick
+-            expect(subject.details["Channel depth"]["Red"]).to eq "8-bit"
++            expect(subject.details["Channel depth"]["red"]).to eq "8-bit"
+             expect(subject.details).to have_key("Background color")
+             expect(subject.details["Properties"]).to have_key("date:create")
+           else
