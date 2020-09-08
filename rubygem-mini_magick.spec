@@ -1,7 +1,7 @@
 %global gem_name mini_magick
 Name:                rubygem-%{gem_name}
 Version:             4.8.0
-Release:             1
+Release:             2
 Summary:             Manipulate images with minimal use of memory via ImageMagick
 License:             MIT
 URL:                 https://github.com/minimagick/minimagick
@@ -31,7 +31,6 @@ Documentation for %{name}.
 
 %prep
 %setup -q -n %{gem_name}-%{version}
-ln -s minimagick-%{version}/spec spec
 
 %build
 gem build ../%{gem_name}-%{version}.gemspec
@@ -45,6 +44,7 @@ cp -a .%{gem_dir}/* \
 %check
 pushd .%{gem_instdir}
 tar xzvf %{SOURCE1}
+cd  minimagick-%{version}
 cat %{PATCH0} | patch -p1
 cat %{PATCH1} | patch -p1
 sed -i -e '/require "pry"/ s/^/#/g' \
@@ -72,5 +72,8 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Tue Sep 8 2020 yanan li <liyanan032@huawei.com> - 1.0.2-2
+- fix build fail
+
 * Wed Aug 19 2020 geyanan <geyanan2@huawei.com> - 4.8.0-1
 - package init
