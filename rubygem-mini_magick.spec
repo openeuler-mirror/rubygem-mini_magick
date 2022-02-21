@@ -1,7 +1,7 @@
 %global gem_name mini_magick
 Name:                rubygem-%{gem_name}
 Version:             4.8.0
-Release:             3
+Release:             4
 Summary:             Manipulate images with minimal use of memory via ImageMagick
 License:             MIT
 URL:                 https://github.com/minimagick/minimagick
@@ -15,6 +15,9 @@ Patch0:              mini_magick-4.8.0-Use-smallcase-for-Image-details-in-tests.
 Patch1:              mini_magick-4.8.0-match-new-identify-error-message-in-tests.patch
 Patch2:              CVE-2019-13574-1.patch
 Patch3:              CVE-2019-13574-2.patch
+%ifarch riscv64
+Patch4:		     mini_magick-4.8.0-fix-riscv-timeout.patch
+%endif
 Requires:            ImageMagick
 BuildRequires:       ruby(release) rubygems-devel ruby rubygem(rspec) rubygem(webmock) ImageMagick
 BuildArch:           noarch
@@ -34,6 +37,9 @@ Documentation for %{name}.
 %prep
 %setup -q -n %{gem_name}-%{version}
 %patch2 -p1
+%ifarch riscv64
+%patch4 -p1
+%endif
 
 %build
 gem build ../%{gem_name}-%{version}.gemspec
@@ -76,6 +82,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Mon Feb 21 2022 YukariChiba <i@0x7f.cc> - 1.0.2-4
+- Fix package for RISC-V (adjust test timeout)
+
 * Tue Apr 13 2021 wangxiao65 <wangxiao65@huawei.com> - 1.0.2-3
 - Fix CVE-2019-13574
 
