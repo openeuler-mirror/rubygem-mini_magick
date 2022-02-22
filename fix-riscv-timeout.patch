@@ -1,11 +1,12 @@
 --- a/spec/lib/mini_magick/shell_spec.rb
 +++ b/spec/lib/mini_magick/shell_spec.rb
-@@ -56,7 +56,7 @@
+@@ -56,7 +56,8 @@
          end
  
          it "handles larger output" do
 -          Timeout.timeout(1) do
-+          Timeout.timeout(100) do
++          MiniMagick.timeout = 30
++          Timeout.timeout(500) do
              stdout, _, _ = subject.execute(%W[convert #{image_path(:gif)} -])
              expect(stdout).to match("GIF")
            end
