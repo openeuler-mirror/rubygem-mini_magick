@@ -1,22 +1,14 @@
 %global gem_name mini_magick
 Name:                rubygem-%{gem_name}
-Version:             4.8.0
-Release:             4
+Version:             4.11.0
+Release:             1
 Summary:             Manipulate images with minimal use of memory via ImageMagick
 License:             MIT
 URL:                 https://github.com/minimagick/minimagick
 Source0:             https://rubygems.org/gems/%{gem_name}-%{version}.gem
 Source1:             https://github.com/minimagick/minimagick/archive/v%{version}.tar.gz
-# Use smallcase for MiniMagick::Image#details
-# https://github.com/minimagick/minimagick/pull/454/
-Patch0:              mini_magick-4.8.0-Use-smallcase-for-Image-details-in-tests.patch
-# Match new `identify` error message
-# https://github.com/minimagick/minimagick/pull/455/
-Patch1:              mini_magick-4.8.0-match-new-identify-error-message-in-tests.patch
-Patch2:              CVE-2019-13574-1.patch
-Patch3:              CVE-2019-13574-2.patch
 %ifarch riscv64
-Patch4:		     mini_magick-4.8.0-fix-riscv-timeout.patch
+Patch0:		     fix-riscv-timeout.patch
 %endif
 Requires:            ImageMagick
 BuildRequires:       ruby(release) rubygems-devel ruby rubygem(rspec) rubygem(webmock) ImageMagick
@@ -35,11 +27,7 @@ BuildArch:           noarch
 Documentation for %{name}.
 
 %prep
-%setup -q -n %{gem_name}-%{version}
-%patch2 -p1
-%ifarch riscv64
-%patch4 -p1
-%endif
+%autosetup -n %{gem_name}-%{version}
 
 %build
 gem build ../%{gem_name}-%{version}.gemspec
@@ -54,9 +42,6 @@ cp -a .%{gem_dir}/* \
 pushd .%{gem_instdir}
 tar xzvf %{SOURCE1}
 cd  minimagick-%{version}
-cat %{PATCH0} | patch -p1
-cat %{PATCH1} | patch -p1
-cat %{PATCH3} | patch -p1
 sed -i -e '/require "pry"/ s/^/#/g' \
        -e '/require "bundler/ s/^/#/g' \
   spec/spec_helper.rb
@@ -82,6 +67,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Mon Mar 2 2022 YukariChiba <i@0x7f.cc> - 4.11.0-1
+- Upgrade version to 4.11.0 and fix ifarch condition
+
 * Mon Feb 21 2022 YukariChiba <i@0x7f.cc> - 1.0.2-4
 - Fix package for RISC-V (adjust test timeout)
 
